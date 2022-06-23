@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Flowingly.TaxCalculator.Business.CustomValidations
 {
-    public class HtmlAttribute : ValidationAttribute
+    public class XmlAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)
         {

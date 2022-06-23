@@ -10,8 +10,10 @@ namespace Flowingly.TaxCalculator.Business.Services
     {
         public TaxResultDto Calculate(TaxDto taxDto, double taxPercentage)
         {
+            var expenseAsString = GetExpensePartFromText(taxDto.Text);
+
             XmlSerializer serializer = new XmlSerializer(typeof(expense));
-            using (TextReader reader = new StringReader(taxDto.Text))
+            using (TextReader reader = new StringReader(expenseAsString))
             {
                 var expense = (expense)serializer.Deserialize(reader);
 
@@ -33,6 +35,14 @@ namespace Flowingly.TaxCalculator.Business.Services
         private static double GetTotalExcludingSalesTax(double taxPercentage, double total)
         {
             return total - (total / (1 + (taxPercentage / 100)) * (taxPercentage / 100));
+        }
+
+        private static string GetExpensePartFromText(string input)
+        {
+            var startTag = "<expense>";
+            int startIndex = input.IndexOf(startTag) + startTag.Length;
+            int endIndex = input.IndexOf("</expense>", startIndex);
+            return $"<expense>{input.Substring(startIndex, endIndex - startIndex)}</expense>";
         }
     }
 }
